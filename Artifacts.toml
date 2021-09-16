@@ -1,0 +1,6 @@
+[python-fsps]
+git-tree-sha1 = "d63913590bc2e7e02e5e4626b5269a40a535df38"
+
+    [[python-fsps.download]]
+    sha256 = "b6ffdf8f63e9b88f6046030ed2e4e0c50784c31c4cc0e07388f9efcb4251326a"
+    url = "https://github.com/dfm/python-fsps/archive/refs/tags/v0.4.0.tar.gz"

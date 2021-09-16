@@ -1,0 +1,4 @@
+name = "FSPS"
+uuid = "47844c8b-9536-40d6-a250-87830411fe39"
+authors = ["Elijah Mathews <me@elijahmathews.com>"]
+version = "0.1.0"
