@@ -11,11 +11,11 @@ end
 
 
 """
-    _setup(; compute_vega_mags = false, vactoair = false)
+    _setup!(; compute_vega_mags = false, vactoair = false)
 
 Setup FSPS.
 """
-function _setup(; compute_vega_mags = false, vactoair = false)
+function _setup!(; compute_vega_mags = false, vactoair = false)
     temp_compute_vega_mags = Cint[compute_vega_mags]
     temp_vactoair = Cint[vactoair]
     ccall(
@@ -29,9 +29,9 @@ end
 
 
 """
-    _set_ssp_params(...)
+    _set_ssp_params!(...)
 """
-function _set_ssp_params(; imf_type::Integer=2, imf_upper_limit::Real=120.0, imf_lower_limit::Real=0.08,
+function _set_ssp_params!(; imf_type::Integer=2, imf_upper_limit::Real=120.0, imf_lower_limit::Real=0.08,
                          imf1::Real=1.3, imf2::Real=2.3, imf3::Real=2.3, vdmc::Real=0.08, mdave::Real=0.5,
                          dell::Real=0.0, delt::Real=0.0, sbss::Real=0.0, fbhb::Real=0.0, pagb::Real=1.0,
                          add_stellar_remnants::Integer=true, tpagb_norm_type::Integer=2,
@@ -122,39 +122,291 @@ function _set_ssp_params(; imf_type::Integer=2, imf_upper_limit::Real=120.0, imf
 end
 
 
-#
-# SKIP set_csp_params
-#
+"""
+    _set_csp_params!(...)
+"""
+function _set_csp_params!(; smooth_velocity::Integer=true, redshift_colors::Integer=false,
+                          compute_light_ages::Integer=false, nebemlineinspec::Integer=true,
+                          dust_type::Integer=0, add_dust_emission::Integer=true,
+                          add_neb_emission::Integer=false, add_neb_continuum::Integer=true,
+                          cloudy_dust::Integer=false, add_igm_absorption::Integer=false,
+                          zmet::Integer=1, sfh::Integer=0, wgp1::Integer=1, wgp2::Integer=1,
+                          wgp3::Integer=1, tau::Real=1.0, constant::Real=0.0, tage::Real=0.0,
+                          fburst::Real=0.0, tburst::Real=11.0, dust1::Real=0.0, dust2::Real=0.0,
+                          logzsol::Real=0.0, zred::Real=0.0, pmetals::Real=2.0, dust_clumps::Real=-99.0,
+                          frac_nodust::Real=0.0, dust_index::Real=-0.7, dust_tesc::Real=7.0,
+                          frac_obrun::Real=0.0, uvb::Real=1.0, mwr::Real=3.1, dust1_index::Real=-1.0,
+                          sf_start::Real=0.0, sf_trunc::Real=0.0, sf_slope::Real=0.0,
+                          duste_gamma::Real=0.01, duste_umin::Real=1.0, duste_qpah::Real=3.5,
+                          sigma_smooth::Real=0.0, min_wave_smooth::Real=1e3, max_wave_smooth::Real=1e4,
+                          gas_logu::Real=-2.0, gas_logz::Real=0.0, igm_factor::Real=1.0,
+                          fagn::Real=0.0, agn_tau::Real=10.0)
+    temp_smooth_velocity = Cint[smooth_velocity]
+    temp_redshift_colors = Cint[redshift_colors]
+    temp_compute_light_ages = Cint[compute_light_ages]
+    temp_nebemlineinspec = Cint[nebemlineinspec]
+    temp_dust_type = Cint[dust_type]
+    temp_add_dust_emission = Cint[add_dust_emission]
+    temp_add_neb_emission = Cint[add_neb_emission]
+    temp_add_neb_continuum = Cint[add_neb_continuum]
+    temp_cloudy_dust = Cint[cloudy_dust]
+    temp_add_igm_absorption = Cint[add_igm_absorption]
+    temp_zmet = Cint[zmet]
+    temp_sfh = Cint[sfh]
+    temp_wgp1 = Cint[wgp1]
+    temp_wgp2 = Cint[wgp2]
+    temp_wgp3 = Cint[wgp3]
+    temp_tau = Cdouble[tau]
+    temp_constant = Cdouble[constant]
+    temp_tage = Cdouble[tage]
+    temp_fburst = Cdouble[fburst]
+    temp_tburst = Cdouble[tburst]
+    temp_dust1 = Cdouble[dust1]
+    temp_dust2 = Cdouble[dust2]
+    temp_logzsol = Cdouble[logzsol]
+    temp_zred = Cdouble[zred]
+    temp_pmetals = Cdouble[pmetals]
+    temp_dust_clumps = Cdouble[dust_clumps]
+    temp_frac_nodust = Cdouble[frac_nodust]
+    temp_dust_index = Cdouble[dust_index]
+    temp_dust_tesc = Cdouble[dust_tesc]
+    temp_frac_obrun = Cdouble[frac_obrun]
+    temp_uvb = Cdouble[uvb]
+    temp_mwr = Cdouble[mwr]
+    temp_dust1_index = Cdouble[dust1_index]
+    temp_sf_start = Cdouble[sf_start]
+    temp_sf_trunc = Cdouble[sf_trunc]
+    temp_sf_slope = Cdouble[sf_slope]
+    temp_duste_gamma = Cdouble[duste_gamma]
+    temp_duste_umin = Cdouble[duste_umin]
+    temp_duste_qpah = Cdouble[duste_qpah]
+    temp_sigma_smooth = Cdouble[sigma_smooth]
+    temp_min_wave_smooth = Cdouble[min_wave_smooth]
+    temp_max_wave_smooth = Cdouble[max_wave_smooth]
+    temp_gas_logu = Cdouble[gas_logu]
+    temp_gas_logz = Cdouble[gas_logz]
+    temp_igm_factor = Cdouble[igm_factor]
+    temp_fagn = Cdouble[fagn]
+    temp_agn_tau = Cdouble[agn_tau]
+    ccall(
+        (:__driver_MOD_set_csp_params, libfp),
+        Cvoid,
+        (
+            Ref{Cint},    # smooth_velocity
+            Ref{Cint},    # redshift_colors
+            Ref{Cint},    # compute_light_ages
+            Ref{Cint},    # nebemlineinspec
+            Ref{Cint},    # dust_type
+            Ref{Cint},    # add_dust_emission
+            Ref{Cint},    # add_neb_emission
+            Ref{Cint},    # add_neb_continuum
+            Ref{Cint},    # cloudy_dust
+            Ref{Cint},    # add_igm_absorption
+            Ref{Cint},    # zmet
+            Ref{Cint},    # sfh
+            Ref{Cint},    # wgp1
+            Ref{Cint},    # wgp2
+            Ref{Cint},    # wgp3
+            Ref{Cdouble}, # tau
+            Ref{Cdouble}, # constant
+            Ref{Cdouble}, # tage
+            Ref{Cdouble}, # fburst
+            Ref{Cdouble}, # tburst
+            Ref{Cdouble}, # dust1
+            Ref{Cdouble}, # dust2
+            Ref{Cdouble}, # logzsol
+            Ref{Cdouble}, # zred
+            Ref{Cdouble}, # pmetals
+            Ref{Cdouble}, # dust_clumps
+            Ref{Cdouble}, # frac_nodust
+            Ref{Cdouble}, # dust_index
+            Ref{Cdouble}, # dust_tesc
+            Ref{Cdouble}, # frac_obrun
+            Ref{Cdouble}, # uvb
+            Ref{Cdouble}, # mwr
+            Ref{Cdouble}, # dust1_index
+            Ref{Cdouble}, # sf_start
+            Ref{Cdouble}, # sf_trunc
+            Ref{Cdouble}, # sf_slope
+            Ref{Cdouble}, # duste_gamma
+            Ref{Cdouble}, # duste_umin
+            Ref{Cdouble}, # duste_qpah
+            Ref{Cdouble}, # sigma_smooth
+            Ref{Cdouble}, # min_wave_smooth
+            Ref{Cdouble}, # max_wave_smooth
+            Ref{Cdouble}, # gas_logu
+            Ref{Cdouble}, # gas_logz
+            Ref{Cdouble}, # igm_factor
+            Ref{Cdouble}, # fagn
+            Ref{Cdouble}, # agn_tau
+        ),
+        temp_smooth_velocity,
+        temp_redshift_colors,
+        temp_compute_light_ages,
+        temp_nebemlineinspec,
+        temp_dust_type,
+        temp_add_dust_emission,
+        temp_add_neb_emission,
+        temp_add_neb_continuum,
+        temp_cloudy_dust,
+        temp_add_igm_absorption,
+        temp_zmet,
+        temp_sfh,
+        temp_wgp1,
+        temp_wgp2,
+        temp_wgp3,
+        temp_tau,
+        temp_constant,
+        temp_tage,
+        temp_fburst,
+        temp_tburst,
+        temp_dust1,
+        temp_dust2,
+        temp_logzsol,
+        temp_zred,
+        temp_pmetals,
+        temp_dust_clumps,
+        temp_frac_nodust,
+        temp_dust_index,
+        temp_dust_tesc,
+        temp_frac_obrun,
+        temp_uvb,
+        temp_mwr,
+        temp_dust1_index,
+        temp_sf_start,
+        temp_sf_trunc,
+        temp_sf_slope,
+        temp_duste_gamma,
+        temp_duste_umin,
+        temp_duste_qpah,
+        temp_sigma_smooth,
+        temp_min_wave_smooth,
+        temp_max_wave_smooth,
+        temp_gas_logu,
+        temp_gas_logz,
+        temp_igm_factor,
+        temp_fagn,
+        temp_agn_tau,
+    )
+end
 
 
-#
-# SKIP ssps
-#
+"""
+    _ssps!()
+"""
+function _ssps!()
+    ccall(
+        (:__driver_MOD_ssps, libfp),
+        Cvoid,
+        (Ref{Cvoid},),
+        nothing::Cvoid,
+    )
+end
 
 
-#
-# SKIP ssp
-#
+"""
+    _ssp!(zi)
+"""
+function _ssp!(zi::Integer)
+    temp_zi = Cint[zi]
+    ccall(
+        (:__driver_MOD_ssp, libfp),
+        Cvoid,
+        (Ref{Cint},),
+        temp_zi,
+    )
+end
 
 
-#
-# SKIP compute_zdep
-#
+"""
+    _compute_zdep!(ztype)
+"""
+function _compute_zdep!(ztype::Integer)
+    ns = _get_nspec()
+    n_age = _get_ntfull()
+    temp_ztype = Cint[ztype]
+    ccall(
+        (:__driver_MOD_compute_zdep, libfp),
+        Cvoid,
+        (Ref{Cint}, Ref{Cint}, Ref{Cint},),
+        ns,
+        n_age,
+        temp_ztype,
+    )
+end
 
 
-#
-# SKIP get_spec
-#
+"""
+    _get_spec()
+"""
+function _get_spec()
+    ns = _get_nspec()
+    n_age = _get_ntfull()
+    spec_out = zeros(Cdouble, n_age, ns)
+    ccall(
+        (:__driver_MOD_get_spec, libfp),
+        Cvoid,
+        (Ref{Cint}, Ref{Cint}, Ref{Cdouble}),
+        ns,
+        n_age,
+        spec_out,
+    )
+    return spec_out
+end
 
 
-#
-# SKIP get_mags
-#
+"""
+    _get_mags(zred, mag_compute)
+"""
+function _get_mags(zred::Real, mag_compute::Vector{I}) where {I <: Integer}
+    ns = _get_nspec()
+    n_age = _get_ntfull()
+    n_bands = _get_nbands()
+    temp_zred = Cdouble[zred]
+    temp_mag_compute = Vector{Cint}(mag_compute)
+    mags = zeros(Cdouble, n_age, n_bands)
+    ccall(
+        (:__driver_MOD_get_mags, libfp),
+        Cvoid,
+        (Ref{Cint}, Ref{Cint}, Ref{Cint}, Ref{Cdouble}, Ref{Cint}, Ref{Cdouble}),
+        ns,
+        n_age,
+        n_bands,
+        temp_zred,
+        temp_mag_compute,
+        mags,
+    )
+    return mags
+end
 
 
-#
-# SKIP interp_ssp
-#
+"""
+    _interp_ssp(zpos, tpos)
+"""
+function _interp_ssp(zpos::Real, tpos::Real)
+    ns = _get_nspec()
+    temp_zpos = Cdouble[zpos]
+    temp_tpos = Cdouble[tpos]
+    spec = zeros(Cdouble, ns)
+    mass = Cdouble[0.0]
+    lbol = Cdouble[0.0]
+    ccall(
+        (:__driver_MOD_interp_ssp, libfp),
+        Cvoid,
+        (Ref{Cint}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}),
+        ns,
+        temp_zpos,
+        temp_tpos,
+        spec,
+        mass,
+        lbol,
+    )
+    Dict(
+        :spec => spec,
+        :mass => mass,
+        :lbol => lbol,
+    )
+end
 
 
 #
