@@ -142,6 +142,46 @@ end
 #
 
 
+#
+# SKIP get_spec
+#
+
+
+#
+# SKIP get_mags
+#
+
+
+#
+# SKIP interp_ssp
+#
+
+
+#
+# SKIP smooth_spectrum
+#
+
+
+#
+# SKIP stellar_spectrum
+#
+
+
+#
+# SKIP get_ssp_spec
+#
+
+
+#
+# SKIP set_sfh_tab
+#
+
+
+#
+# SKIP set_ssp_lsf
+#
+
+
 """
     _get_setup_vars()
 """
