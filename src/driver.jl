@@ -28,9 +28,98 @@ function _setup(; compute_vega_mags = false, vactoair = false)
 end
 
 
-#
-# SKIP set_ssp_params
-#
+"""
+    _set_ssp_params(...)
+"""
+function _set_ssp_params(; imf_type::Integer=2, imf_upper_limit::Real=120.0, imf_lower_limit::Real=0.08,
+                         imf1::Real=1.3, imf2::Real=2.3, imf3::Real=2.3, vdmc::Real=0.08, mdave::Real=0.5,
+                         dell::Real=0.0, delt::Real=0.0, sbss::Real=0.0, fbhb::Real=0.0, pagb::Real=1.0,
+                         add_stellar_remnants::Integer=true, tpagb_norm_type::Integer=2,
+                         add_agb_dust_model::Integer=true, agb_dust::Real=1.0, redgb::Real=1.0, agb::Real=1.0,
+                         masscut::Real=150.0, fcstar::Real=1.0, evtype::Real=-1, use_wr_spectra::Integer=true,
+                         logt_wmb_hot::Real=0.0, smooth_lsf::Integer=false)
+    temp_imf_type = Cint[imf_type]
+    temp_imf_upper_limit = Cdouble[imf_upper_limit]
+    temp_imf_lower_limit = Cdouble[imf_lower_limit]
+    temp_imf1 = Cdouble[imf1]
+    temp_imf2 = Cdouble[imf2]
+    temp_imf3 = Cdouble[imf3]
+    temp_vdmc = Cdouble[vdmc]
+    temp_mdave = Cdouble[mdave]
+    temp_dell = Cdouble[dell]
+    temp_delt = Cdouble[delt]
+    temp_sbss = Cdouble[sbss]
+    temp_fbhb = Cdouble[fbhb]
+    temp_pagb = Cdouble[pagb]
+    temp_add_stellar_remnants = Cint[add_stellar_remnants]
+    temp_tpagb_norm_type = Cint[tpagb_norm_type]
+    temp_add_agb_dust_model = Cint[add_agb_dust_model]
+    temp_agb_dust = Cdouble[agb_dust]
+    temp_redgb = Cdouble[redgb]
+    temp_agb = Cdouble[agb]
+    temp_masscut = Cdouble[masscut]
+    temp_fcstar = Cdouble[fcstar]
+    temp_evtype = Cdouble[evtype]
+    temp_use_wr_spectra = Cint[use_wr_spectra]
+    temp_logt_wmb_hot = Cdouble[logt_wmb_hot]
+    temp_smooth_lsf = Cint[smooth_lsf]
+    ccall(
+        (:__driver_MOD_set_ssp_params, libfp),
+        Cvoid,
+        (
+            Ref{Cint},    # imf_type
+            Ref{Cdouble}, # imf_upper_limit
+            Ref{Cdouble}, # imf_lower_limit
+            Ref{Cdouble}, # imf1
+            Ref{Cdouble}, # imf2
+            Ref{Cdouble}, # imf3
+            Ref{Cdouble}, # vdmc
+            Ref{Cdouble}, # mdave
+            Ref{Cdouble}, # dell
+            Ref{Cdouble}, # delt
+            Ref{Cdouble}, # sbss
+            Ref{Cdouble}, # fbhb
+            Ref{Cdouble}, # pagb
+            Ref{Cint},    # add_stellar_remnants
+            Ref{Cint},    # tpagb_norm_type
+            Ref{Cint},    # add_agb_dust_model
+            Ref{Cdouble}, # agb_dust
+            Ref{Cdouble}, # redgb
+            Ref{Cdouble}, # agb
+            Ref{Cdouble}, # masscut
+            Ref{Cdouble}, # fcstar
+            Ref{Cdouble}, # evtype
+            Ref{Cint},    # use_wr_spectra
+            Ref{Cdouble}, # logt_wmb_hot
+            Ref{Cint},    # smooth_lsf
+        ),
+        temp_imf_type,
+        temp_imf_upper_limit,
+        temp_imf_lower_limit,
+        temp_imf1,
+        temp_imf2,
+        temp_imf3,
+        temp_vdmc,
+        temp_mdave,
+        temp_dell,
+        temp_delt,
+        temp_sbss,
+        temp_fbhb,
+        temp_pagb,
+        temp_add_stellar_remnants,
+        temp_tpagb_norm_type,
+        temp_add_agb_dust_model,
+        temp_agb_dust,
+        temp_redgb,
+        temp_agb,
+        temp_masscut,
+        temp_fcstar,
+        temp_evtype,
+        temp_use_wr_spectra,
+        temp_logt_wmb_hot,
+        temp_smooth_lsf,
+    )
+end
 
 
 #
@@ -296,15 +385,15 @@ function _get_stats()
         (:__driver_MOD_get_stats, libfp),
         Cvoid,
         (
-            Ref{Cint},
-            Ref{Cint},
-            Ref{Cdouble},
-            Ref{Cdouble},
-            Ref{Cdouble},
-            Ref{Cdouble},
-            Ref{Cdouble},
-            Ref{Cdouble},
-            Ref{Cdouble},
+            Ref{Cint},    # n_age
+            Ref{Cint},    # nline
+            Ref{Cdouble}, # age
+            Ref{Cdouble}, # mass_csp
+            Ref{Cdouble}, # lbol_csp
+            Ref{Cdouble}, # sfr
+            Ref{Cdouble}, # mdust
+            Ref{Cdouble}, # mformed
+            Ref{Cdouble}, # emlines
         ),
         n_age,
         nline,
