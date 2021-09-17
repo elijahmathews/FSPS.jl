@@ -409,29 +409,142 @@ function _interp_ssp(zpos::Real, tpos::Real)
 end
 
 
-#
-# SKIP smooth_spectrum
-#
+"""
+    _smooth_spectrum(wave, spec, sigma_broad, minw, maxw)
+"""
+function _smooth_spectrum!(ns::Integer, wave::Vector{R}, spec::Vector{R}, sigma_broad::Real,
+                           minw::Real, maxw::Real) where {R <: Real}
+    temp_ns = Cint[ns]
+    temp_wave = Vector{Cdouble}(wave)
+    temp_spec = Vector{Cdouble}(spec)
+    temp_sigma_broad = Cdouble[sigma_broad]
+    temp_minw = Cdouble[minw]
+    temp_maxw = Cdouble[maxw]
+    ccall(
+        (:__driver_MOD_smooth_spectrum, libfp),
+        Cvoid,
+        (Ref{Cint}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}),
+        temp_ns,
+        temp_wave,
+        temp_spec,
+        temp_sigma_broad,
+        temp_minw,
+        temp_maxw,
+    )
+    spec = temp_spec
+end
 
 
-#
-# SKIP stellar_spectrum
-#
+"""
+    _stellar_spectrum!(...)
+"""
+function _stellar_spectrum!(mact::Real, logt::Real, lbol::Real, logg::Real, phase::Real,
+                            ffco::Real, lmdot::Real, wght::Real, spec_out::Vector{R}) where {R <: Real}
+    ns = _get_nspec()
+    temp_mact = Cdouble[mact]
+    temp_logt = Cdouble[logt]
+    temp_lbol = Cdouble[lbol]
+    temp_logg = Cdouble[logg]
+    temp_phase = Cdouble[phase]
+    temp_ffco = Cdouble[ffco]
+    temp_lmdot = Cdouble[lmdot]
+    temp_wght = Cdouble[wght]
+    temp_spec_out = Vector{Cdouble}(spec_out)
+    ccall(
+        (:__driver_MOD_stellar_spectrum, libfp),
+        Cvoid,
+        (
+         Ref{Cint},    # ns
+         Ref{Cdouble}, # mact
+         Ref{Cdouble}, # logt
+         Ref{Cdouble}, # lbol
+         Ref{Cdouble}, # logg
+         Ref{Cdouble}, # phase
+         Ref{Cdouble}, # ffco
+         Ref{Cdouble}, # lmdot
+         Ref{Cdouble}, # wght
+         Ref{Cdouble}, # spec_out
+        ),
+        ns,
+        temp_mact,
+        temp_logt,
+        temp_lbol,
+        temp_logg,
+        temp_phase,
+        temp_ffco,
+        temp_lmdot,
+        temp_wght,
+        temp_spec_out,
+    )
+    spec_out = temp_spec_out
+end
 
 
-#
-# SKIP get_ssp_spec
-#
+"""
+    _get_ssp_spec!(ssp_spec_out, ssp_mass_out, ssp_lbol_out)
+"""
+function _get_ssp_spec!(ssp_spec_out::Matrix{R}, ssp_mass_out::Vector{R}, ssp_lbol_out::Vector{R}) where {R <: Real}
+    ns = _get_nspec()
+    n_age = _get_ntfull()
+    n_z = _get_nz()
+    temp_ssp_spec_out = Matrix{Cdouble}(ssp_spec_out)
+    temp_ssp_mass_out = Vector{Cdouble}(ssp_mass_out)
+    temp_ssp_lbol_out = Vector{Cdouble}(ssp_lbol_out)
+    ccall(
+        (:__driver_MOD_get_ssp_spec, libfp),
+        Cvoid,
+        (Ref{Cint}, Ref{Cint}, Ref{Cint}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}),
+        ns,
+        n_age,
+        n_z,
+        temp_ssp_spec_out,
+        temp_ssp_mass_out,
+        temp_ssp_lbol_out,
+    )
+    ssp_spec_out = temp_ssp_spec_out
+    ssp_mass_out = temp_ssp_mass_out
+    ssp_lbol_out = temp_ssp_lbol_out
+end
 
 
-#
-# SKIP set_sfh_tab
-#
+"""
+    _set_sfh_tab!(ntab, age, sfr, met)
+"""
+function _get_sfh_tab!(ntab::Integer, age::Vector{R}, sfr::Vector{R}, met::Vector{R}) where {R <: Real}
+    temp_ntab = Cint[ntab]
+    temp_age = Vector{Cdouble}(age)
+    temp_sfr = Vector{Cdouble}(sfr)
+    temp_met = Vector{Cdouble}(met)
+    ccall(
+        (:__driver_MOD_set_sfh_tab, libfp),
+        Cvoid,
+        (Ref{Cint}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}),
+        temp_ntab,
+        temp_age,
+        temp_sfr,
+        temp_met,
+    )
+end
 
 
-#
-# SKIP set_ssp_lsf
-#
+"""
+    _set_ssp_lsf!(nsv, sigma, wlo, whi)
+"""
+function _set_ssp_lsf!(nsv::Integer, sigma::Vector{R}, wlo::Real, whi::Real) where {R <: Real}
+    temp_nsv = Cint[nsv]
+    temp_sigma = Vector{Cdouble}(sigma)
+    temp_wlo = Cdouble[wlo]
+    temp_whi = Cdouble[whi]
+    ccall(
+        (:__driver_MOD_set_ssp_lsf, libfp),
+        Cvoid,
+        (Ref{Cint}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}),
+        temp_nsv,
+        temp_sigma,
+        temp_wlo,
+        temp_whi,
+    )
+end
 
 
 """
