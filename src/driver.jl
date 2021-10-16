@@ -1,21 +1,43 @@
 const libfp = joinpath(@__DIR__, "..", "deps", "fsps")
 
 """
-    _is_setup()::Bool
+    is_setup()
 
-Check the status of the `is_setup` variable.
+Check if FSPS is has been initially set up or not. Returns `true` if FSPS
+has been set up or `false` if FSPS has not been set up.
 """
-function _is_setup()
+function is_setup()
     unsafe_load(cglobal((:__driver_MOD_is_setup, libfp), Bool))
 end
 
 
 """
-    _setup!(; compute_vega_mags = false, vactoair = false)
+    setup!(; <keyword arguments>)
 
-Setup FSPS.
+Set up FSPS.
+
+# Arguments
+- `compute_vega_mags::Bool=false`: compute spectral flux density in Vega magnitudes rather than AB magnitudes.
+- `vactoair::Bool=false`: compute wavelengths in air rather than in vacuum.
+
+# Examples
+```julia-repl
+julia> using FSPS
+
+julia> FSPS.get_setup_vars()
+Dict{Symbol, Bool} with 2 entries:
+  :compute_vega_mags => 0
+  :vactoair          => 0
+
+julia> FSPS.setup!(; compute_vega_mags=true)
+
+julia> FSPS.get_setup_vars()
+Dict{Symbol, Bool} with 2 entries:
+  :compute_vega_mags => 1
+  :vactoair          => 0
+```
 """
-function _setup!(; compute_vega_mags = false, vactoair = false)
+function setup!(; compute_vega_mags::Bool=false, vactoair::Bool=false)
     temp_compute_vega_mags = Cint[compute_vega_mags]
     temp_vactoair = Cint[vactoair]
     ccall(
@@ -548,9 +570,28 @@ end
 
 
 """
-    _get_setup_vars()
+    get_setup_vars()
+
+Retrieve the `compute_vega_mags` and `vactoair` values FSPS was set up with.
+
+# Examples
+```julia-repl
+julia> using FSPS
+
+julia> FSPS.get_setup_vars()
+Dict{Symbol, Bool} with 2 entries:
+  :compute_vega_mags => 0
+  :vactoair          => 0
+
+julia> FSPS.setup!(; compute_vega_mags=true)
+
+julia> FSPS.get_setup_vars()
+Dict{Symbol, Bool} with 2 entries:
+  :compute_vega_mags => 1
+  :vactoair          => 0
+```
 """
-function _get_setup_vars()
+function get_setup_vars()
     temp_compute_vega_mags = zeros(Cint, 1) 
     temp_vactoair = zeros(Cint, 1)
     ccall(

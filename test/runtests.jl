@@ -1,4 +1,4 @@
 using FSPS
 using Test
 
-@test FSPS._is_setup() == false
+@test FSPS.is_setup() == true
