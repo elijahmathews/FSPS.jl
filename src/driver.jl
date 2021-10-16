@@ -1,4 +1,4 @@
-const libfp = joinpath(@__DIR__, "../deps/fsps")
+const libfp = joinpath(@__DIR__, "..", "deps", "fsps")
 
 """
     _is_setup()::Bool
