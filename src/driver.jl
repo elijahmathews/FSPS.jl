@@ -51,9 +51,28 @@ end
 
 
 """
-    _set_ssp_params!(...)
+    set_ssp_params!(; <keyword arguments>)
+
+Set the parameters that affect the simple stellar population computation.
+
+# Arguments
+
+- `imf_type::Integer=2`: Set the type of stellar [initial mass function](https://en.wikipedia.org/wiki/Initial_mass_function) used.
+  - `imf_type=0`: Use the [Salpeter (1955)](https://doi.org/10.1086/145971) initial mass function.
+  - `imf_type=1`: Use the [Chabrier (2003)](https://doi.org/10.1086/376392) initial mass function.
+  - `imf_type=2`: Use the [Kroupa (2001)](https://doi.org/10.1046/j.1365-8711.2001.04022.x) initial mass function.
+  - `imf_type=3`: Use the [van Dokkum (2008)](https://doi.org/10.1086/525014) initial mass function.
+  - `imf_type=4`: Use the [Davé (2008)](https://doi.org/10.1111/j.1365-2966.2008.12866.x) initial mass function.
+- `imf_upper_limit::Real=120`: The upper limit of the initial mass function in units of solar masses. Note that if this is above the maximum mass in the isochrones then those stars will not contribute to the spectrum but will affect the overall initial mass function normalization.
+- `imf_lower_limit::Real=0.08`: The lower limit of the initial mass function in units of solar masses. Note that if this is below the minimum mass in the isochrones then those stars will not contribute to the spectrum but will affect the overall initial mass function normalization.
+- `imf1::Real=1.3`: Logarithmic slope of the initial mass function over the range `0.08 < M/Msol < 0.5`. Only used if `imf_type=2`.
+- `imf2::Real=2.3`: Logarithmic slope of the initial mass function over the range `0.5 < M/Msol < 1`. Only used if `imf_type=2`.
+- `imf3::Real=2.3`: Logarithmic slope of the initial mass function over the range `1 < M/Msol < imf_upper_limit`. Only used if `imf_type=2`.
+- `vdmc::Real=0.08`: Initial mass function parameter defined by [van Dokkum (2008)](https://doi.org/10.1086/525014). Only used if `imf_type=3`.
+- `mdave::Real=0.5`: Initial mass function parameter defined by [Davé (2008)](https://doi.org/10.1111/j.1365-2966.2008.12866.x). Only used if `imf_type=4`.
+- `dell::Real=0.0`: Shift in the bolometric luminosity in the isochrones for the thermally-pulsating asympotic giant branch. Note that the meaning of this parameter and `delt` reflect the calibrations presented by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486). Only used if `tpagb_norm_type=1`.
 """
-function _set_ssp_params!(; imf_type::Integer=2, imf_upper_limit::Real=120.0, imf_lower_limit::Real=0.08,
+function set_ssp_params!(; imf_type::Integer=2, imf_upper_limit::Real=120.0, imf_lower_limit::Real=0.08,
                          imf1::Real=1.3, imf2::Real=2.3, imf3::Real=2.3, vdmc::Real=0.08, mdave::Real=0.5,
                          dell::Real=0.0, delt::Real=0.0, sbss::Real=0.0, fbhb::Real=0.0, pagb::Real=1.0,
                          add_stellar_remnants::Integer=true, tpagb_norm_type::Integer=2,
@@ -341,27 +360,62 @@ end
 
 
 """
-    _compute_zdep!(ztype)
+    compute_zdep!(zcontinuous::Integer)
+
+Compute the full composite stellar population (and simple stellar populations if not
+already cached) after interpolation in metallicity specified by `zcontinuous`.
+
+# Arguments
+- `zcontinuous::Integer`: Flag specifying how interpolation in metallicity of the simple stellar populations is performed before computing composite stellar population models.
+  - `zcontinuous=0`: No interpolation, use only metallicity index specified by `zmet`.
+  - `zcontinuous=1`: The simple stellar populations are interpolated to the value of `logzsol` before the spectra and magnitudes are computed, and the value of `zmet` is ignored.
+  - `zcontinuous=2`: The simple stellar populations are convolved with a metallicity distribution function specified by the `logzsol` and `pmetals` parameters. The value of `zmet` is ignored.
+  - `zcontinuous=3`: Use all available simple stellar population metallicities when computing the composite model, for use exclusively with tabular star formation histories where the metallicity evolution as a function of age is given (see [`set_tabular_sfh`](@ref)). The values of `zmet` and `logzsol` are ignored. Furthermore, `add_neb_emission` must be set to `false`.
 """
-function _compute_zdep!(ztype::Integer)
+function compute_zdep!(zcontinuous::Integer)
     ns = _get_nspec()
     n_age = _get_ntfull()
-    temp_ztype = Cint[ztype]
+    temp_zcontinuous = Cint[zcontinuous]
     ccall(
         (:__driver_MOD_compute_zdep, libfp),
         Cvoid,
         (Ref{Cint}, Ref{Cint}, Ref{Cint},),
         ns,
         n_age,
-        temp_ztype,
+        temp_zcontinuous,
     )
 end
 
 
 """
-    _get_spec()
+    _get_spec_vector()
+
+Retrieve the spectrum `ocompsp(1)%spec` from FSPS, returns a `Vector{Cdouble}`.
+Used in the case where `tage > 0`.
 """
-function _get_spec()
+function _get_spec_vector()
+    ns = _get_nspec()
+    n_age = 1
+    spec_out = zeros(Cdouble, ns)
+    ccall(
+        (:__driver_MOD_get_spec, libfp),
+        Cvoid,
+        (Ref{Cint}, Ref{Cint}, Ref{Cdouble}),
+        ns,
+        n_age,
+        spec_out,
+    )
+    return spec_out
+end
+
+
+"""
+    _get_spec_matrix()
+
+Retrieve the spectra `ocompsp(i)%spec` from FSPS for all `i`, returns a `Matrix{Cdouble}`.
+Used in the case where `tage == 0`.
+"""
+function _get_spec_matrix()
     ns = _get_nspec()
     n_age = _get_ntfull()
     spec_out = zeros(Cdouble, ns, n_age)
