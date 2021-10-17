@@ -2,3 +2,4 @@
 *.so
 *.mod
 docs/build/*
+.travis.yml
