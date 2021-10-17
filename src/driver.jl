@@ -364,7 +364,7 @@ end
 function _get_spec()
     ns = _get_nspec()
     n_age = _get_ntfull()
-    spec_out = zeros(Cdouble, n_age, ns)
+    spec_out = zeros(Cdouble, ns, n_age)
     ccall(
         (:__driver_MOD_get_spec, libfp),
         Cvoid,
