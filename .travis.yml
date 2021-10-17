@@ -10,14 +10,14 @@ env:
 
 jobs:
   include:
-    - stage: "Testing"
-      julia: 1.6
-      os:
-        - linux
-      script:
-        - julia -e 'using Pkg; Pkg.activate("."); Pkg.test(coverage=true)'
-      after_success:
-        - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+    #    - stage: "Testing"
+    #      julia: 1.6
+    #      os:
+    #        - linux
+    #      script:
+    #        - julia -e 'using Pkg; Pkg.activate("."); Pkg.test(coverage=true)'
+    #      after_success:
+    #        - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
     - stage: "Documentation"
       julia: 1.6
       os: linux
