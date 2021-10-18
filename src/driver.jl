@@ -57,39 +57,39 @@ Set the parameters that affect the simple stellar population computation.
 
 # Arguments
 
-- `imf_type::Integer=2`: Set the type of stellar [initial mass function](https://en.wikipedia.org/wiki/Initial_mass_function) used.
-  - `imf_type=0`: Use the [Salpeter (1955)](https://doi.org/10.1086/145971) initial mass function.
-  - `imf_type=1`: Use the [Chabrier (2003)](https://doi.org/10.1086/376392) initial mass function.
-  - `imf_type=2`: Use the [Kroupa (2001)](https://doi.org/10.1046/j.1365-8711.2001.04022.x) initial mass function.
-  - `imf_type=3`: Use the [van Dokkum (2008)](https://doi.org/10.1086/525014) initial mass function.
-  - `imf_type=4`: Use the [Davé (2008)](https://doi.org/10.1111/j.1365-2966.2008.12866.x) initial mass function.
-- `imf_upper_limit::Real=120`: The upper limit of the initial mass function in units of solar masses. Note that if this is above the maximum mass in the isochrones then those stars will not contribute to the spectrum but will affect the overall initial mass function normalization.
-- `imf_lower_limit::Real=0.08`: The lower limit of the initial mass function in units of solar masses. Note that if this is below the minimum mass in the isochrones then those stars will not contribute to the spectrum but will affect the overall initial mass function normalization.
-- `imf1::Real=1.3`: Logarithmic slope of the initial mass function over the range `0.08 < M/Msol < 0.5`. Only used if `imf_type=2`.
-- `imf2::Real=2.3`: Logarithmic slope of the initial mass function over the range `0.5 < M/Msol < 1`. Only used if `imf_type=2`.
-- `imf3::Real=2.3`: Logarithmic slope of the initial mass function over the range `1 < M/Msol < imf_upper_limit`. Only used if `imf_type=2`.
-- `vdmc::Real=0.08`: Initial mass function parameter defined by [van Dokkum (2008)](https://doi.org/10.1086/525014). Only used if `imf_type=3`.
-- `mdave::Real=0.5`: Initial mass function parameter defined by [Davé (2008)](https://doi.org/10.1111/j.1365-2966.2008.12866.x). Only used if `imf_type=4`.
-- `dell::Real=0.0`: Shift in bolometric luminosity in the isochrones for the thermally-pulsating asymptotic giant branch stars. Note that the meaning of this parameter and `delt` reflect the calibrations presented by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486). Only used if `tpagb_norm_type=1`.
-- `delt::Real=0.0`: Shift in effective temperature in the isochrones for the thermally-pulsating asymptotic giant branch stars. Note that the meaning of this parameter and `dell` reflect the calibrations presented by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486). Only used if `tpagb_norm_type=1`.
-- `sbss::Real=0.0`: Specific frequency of blue straggler stars as parameterized by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486).
-- `fbhb::Real=0.0`: Fraction of horizontal branch stars that are blue as parameterized by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486). The blue horizontal branch stars are uniformly spread in effective temperature to 10⁴ K.
-- `pagb::Real=1.0`: Weight given to the post-asymptotic giant branch phase. A value of `pagb=0.0` turns off post-asymptotic giant branch stars; a value of `pagb=1.0` implies that the [Vassiliadis & Wood (1994)](https://doi.org/10.1086/191962) tracks are implemented as-is.
-- `add_stellar_remnants::Integer=true`: Add stellar remnants in the stellar mass computation.
-- `tpagb_norm_type::Integer=2`: Specify the thermally-pulsating asymptotic giant branch normalization scheme.
-  - `tpagb_norm_type=0`: Use the Padova ([Marigo & Girardi 2007](https://doi.org/10.1051/0004-6361:20066772)) isochrones.
-  - `tpagb_norm_type=1`: Use the [Conroy & Gunn (2010)](https://doi.org/10.1088/0004-637X/712/2/833) normalization.
-  - `tpagb_norm_type=2`: Use the [Villaume et al. (2015)](https://doi.org/10.1088/0004-637X/806/1/82) normalization.
-- `add_agb_dust_model::Bool=true`: Turn on the asymptotic giant branch circumstellar dust model presented by [Villaume (2014)](https://doi.org/2014AAS...22315115V). The asymptotic giant branch emission is scaled by the parameter `agb_dust`.
-- `agb_dust::Real=1.0`: Scale the circumstellar asymptotic giant branch dust emission.
-- `redgb::Real=1.0`: Modify weight given to the red giant branch. Only available with the BaSTI isochrone set.
-- `agb::Real=1.0`: Modify weight given to the thermally-pulsating asymptotic giant branch. Only has an effect with FSPS version 3.1 or later.
-- `masscut::Real=150.0`: Truncate the initial mass function above this value (in solar masses).
-- `fcstar::Real=1.0`: Fraction of stars that the Padova isochrones identify as carbon stars that FSPS assigns to a carbon star spectrum. Set to `0.0` if all carbon stars should be regular M-type stars.
-- `evtype::Integer=-1`: Compute simple stellar populations for only the given evolutionary type. All phases used when `evtype=-1`.
-- `use_wr_spectra::Bool=true`: Turn on the Wolf-Rayet spectral library. If `false`, the default library will be used instead.
-- `logt_wmb_hot::Real=0.0`: Use the WMBasic hot star library ([Eldridge et al. 2017](https://doi.org/10.1017/pasa.2017.51) above this value of effective temperature or 25000 K (whichever is larger).
-- `smooth_lsf::Bool=false`: Apply smoothing of the simple stellar populations by a wavelength dependent line spread function. See [`set_lsf`](@ref) for more details. Only takes effect if `smooth_velocity=true`.
+- `imf_type::Integer=2`: set the type of stellar [initial mass function](https://en.wikipedia.org/wiki/Initial_mass_function) used.
+  - `imf_type=0`: use the [Salpeter (1955)](https://doi.org/10.1086/145971) initial mass function.
+  - `imf_type=1`: use the [Chabrier (2003)](https://doi.org/10.1086/376392) initial mass function.
+  - `imf_type=2`: use the [Kroupa (2001)](https://doi.org/10.1046/j.1365-8711.2001.04022.x) initial mass function.
+  - `imf_type=3`: use the [van Dokkum (2008)](https://doi.org/10.1086/525014) initial mass function.
+  - `imf_type=4`: use the [Davé (2008)](https://doi.org/10.1111/j.1365-2966.2008.12866.x) initial mass function.
+- `imf_upper_limit::Real=120`: set the upper limit of the initial mass function in units of solar masses. Note that if this is above the maximum mass in the isochrones then those stars will not contribute to the spectrum but will affect the overall initial mass function normalization.
+- `imf_lower_limit::Real=0.08`: set the lower limit of the initial mass function in units of solar masses. Note that if this is below the minimum mass in the isochrones then those stars will not contribute to the spectrum but will affect the overall initial mass function normalization.
+- `imf1::Real=1.3`: set the logarithmic slope of the initial mass function over the range `0.08 < M/Msol < 0.5`. Only used if `imf_type=2`.
+- `imf2::Real=2.3`: set the logarithmic slope of the initial mass function over the range `0.5 < M/Msol < 1`. Only used if `imf_type=2`.
+- `imf3::Real=2.3`: set the logarithmic slope of the initial mass function over the range `1 < M/Msol < imf_upper_limit`. Only used if `imf_type=2`.
+- `vdmc::Real=0.08`: set the initial mass function parameter defined by [van Dokkum (2008)](https://doi.org/10.1086/525014). Only used if `imf_type=3`.
+- `mdave::Real=0.5`: set the initial mass function parameter defined by [Davé (2008)](https://doi.org/10.1111/j.1365-2966.2008.12866.x). Only used if `imf_type=4`.
+- `dell::Real=0.0`: set the shift in bolometric luminosity in the isochrones for the thermally-pulsating asymptotic giant branch stars. Note that the meaning of this parameter and `delt` reflect the calibrations presented by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486). Only used if `tpagb_norm_type=1`.
+- `delt::Real=0.0`: set the shift in effective temperature in the isochrones for the thermally-pulsating asymptotic giant branch stars. Note that the meaning of this parameter and `dell` reflect the calibrations presented by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486). Only used if `tpagb_norm_type=1`.
+- `sbss::Real=0.0`: set the specific frequency of blue straggler stars as parameterized by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486).
+- `fbhb::Real=0.0`: set the fraction of horizontal branch stars that are blue as parameterized by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486). The blue horizontal branch stars are uniformly spread in effective temperature to 10⁴ K.
+- `pagb::Real=1.0`: set the weight given to the post-asymptotic giant branch phase. A value of `pagb=0.0` turns off post-asymptotic giant branch stars; a value of `pagb=1.0` implies that the [Vassiliadis & Wood (1994)](https://doi.org/10.1086/191962) tracks are implemented as-is.
+- `add_stellar_remnants::Integer=true`: add stellar remnants in the stellar mass computation.
+- `tpagb_norm_type::Integer=2`: specify the thermally-pulsating asymptotic giant branch normalization scheme.
+  - `tpagb_norm_type=0`: use the Padova ([Marigo & Girardi 2007](https://doi.org/10.1051/0004-6361:20066772)) isochrones.
+  - `tpagb_norm_type=1`: use the [Conroy & Gunn (2010)](https://doi.org/10.1088/0004-637X/712/2/833) normalization.
+  - `tpagb_norm_type=2`: use the [Villaume et al. (2015)](https://doi.org/10.1088/0004-637X/806/1/82) normalization.
+- `add_agb_dust_model::Bool=true`: turn on the asymptotic giant branch circumstellar dust model presented by [Villaume (2014)](https://doi.org/2014AAS...22315115V). The asymptotic giant branch emission is scaled by the parameter `agb_dust`.
+- `agb_dust::Real=1.0`: scale the circumstellar asymptotic giant branch dust emission.
+- `redgb::Real=1.0`: modify weight given to the red giant branch. Only available with the BaSTI isochrone set.
+- `agb::Real=1.0`: modify weight given to the thermally-pulsating asymptotic giant branch. Only has an effect with FSPS version 3.1 or later.
+- `masscut::Real=150.0`: truncate the initial mass function above this value (in solar masses).
+- `fcstar::Real=1.0`: set the fraction of stars that the Padova isochrones identify as carbon stars that FSPS assigns to a carbon star spectrum. Set to `0.0` if all carbon stars should be regular M-type stars.
+- `evtype::Integer=-1`: compute simple stellar populations for only the given evolutionary type. All phases used when `evtype=-1`.
+- `use_wr_spectra::Bool=true`: turn on the Wolf-Rayet spectral library. If `false`, the default library will be used instead.
+- `logt_wmb_hot::Real=0.0`: use the WMBasic hot star library ([Eldridge et al. 2017](https://doi.org/10.1017/pasa.2017.51) above this value of effective temperature or 25000 K (whichever is larger).
+- `smooth_lsf::Bool=false`: apply smoothing of the simple stellar populations by a wavelength dependent line spread function. See [`set_lsf`](@ref) for more details. Only takes effect if `smooth_velocity=true`.
 """
 function set_ssp_params!(; imf_type::Integer=2, imf_upper_limit::Real=120.0, imf_lower_limit::Real=0.08,
                          imf1::Real=1.3, imf2::Real=2.3, imf3::Real=2.3, vdmc::Real=0.08, mdave::Real=0.5,
@@ -183,13 +183,56 @@ end
 
 
 """
-    _set_csp_params!(...)
+    set_csp_params!(; <keyword arguments>)
+
+Set all the parameters that don't affect the simple stellar population computation.
+
+# Arguments
+- `smooth_velocity::Bool=true`: smooth in velocity space when `true` or smooth in wavelength space when `false`.
+- `redshift_colors::Bool=false`: specify how to compute magnitudes; has no effect. See [`get_mags`](@ref) for details.
+- `compute_light_ages::Bool=false`: specify whether to compute light-weighted ages as opposed to mass-weighted ages.
+- `nebemlineinspec::Bool=true`: include emission line fluxes in the spectrum. Turning this off provides a significant improvement in model evaluation time.
+- `dust_type::Integer=0`: select the attenuation curve for dust around "old" stars.
+  - `dust_type=0`: use a power law with dust index set by `dust_index`.
+  - `dust_type=1`: use Milky Way extinction law (with `Rᵥ = Aᵥ/E(B-V)` with `Rᵥ` being specified by `mwr`) as parameterized by [Cardelli et al. (1989)](https://doi.org/10.1086/167900) with the addition of a variable ultraviolet bump parameterized by `uvb`.
+  - `dust_type=2`: use the [Calzetti et al. (2000)](https://doi.org/10.1086/308692) attenuation curve. Note that if this attenuation curve is chosen, dust attenuation is applied to all stars equally and not dependent on age, and thus `dust2` is the only relevant parameter and sets the overall normalization. Furthermore, `dust1` must be set to `0.0` in order for this to work correctly.
+  - `dust_type=3`: access a variety of attenuation curve models by [Witt & Gordon (2000)](https://doi.org/10.1086/308197), specified by the parameters `wgp1` and `wgp2`. With this selection, `dust1` and `dust2` have no effect since the Witt & Gordon (2000) models specify the full attenuation curve.
+  - `dust_type=4`: use the [Kriek & Conroy (2013)](https://doi.org/10.1088/2041-8205/775/1/L16) attenuation curve. With this selection, the slope of the curve, set by the parameter `dust_index`, is linked to teh strength of the ultraviolet bump and is the offset in slope from the [Calzetti et al. (2000)](https://doi.org/10.1086/308692) curve.
+  - `dust_type=5`: use the Small Magellanic Cloud bar extinction curve by [Gordon et al. (2003)](https://doi.org/10.1086/376774).
+  - `dust_type=6`: use the [Reddy et al. (2015)](https://doi.org/10.1088/0004-637X/806/2/259) attenuation curve.
+- `add_dust_emission::Bool=true`: turn on the [Draine & Li (2007)](https://doi.org/10.1086/511055) dust emission model.
+- `add_neb_emission::Bool=false`: turn on a nebular emission model (both continuum and line emisison), based on Cloudy models from Nell Byler. Contrary to FSPS, this option is turned off by default.
+- `add_neb_continuum::Bool=true`: turn on the nebular continuum component (automatically turned off if `add_neb_emission==false`).
+- `cloudy_dust::Bool=false`: include dust in the Cloudy tables.
+- `add_igm_absorption::Bool=false`: include intergalactic medium absorption via [Madau (1995)](https://doi.org/10.1086/175332). The `zred` parameter must be non-zero for this to have any effect. The optical depth can be scaled using the `igm_factor` parameter.
+- `zmet::Integer=1`: specify the metallicity from the metallicity grid, as an integer ranging from 1 to the length of the metallicity grid. Only used for `zcontinuous==0`.
+- `sfh::Integer=0`: specify the type of star formation history, normalized such that a solar mass of stars is formed over the full star formation history.
+  - `sfh=0`: compute a simple stellar population, i.e. a Dirac delta function star formation history.
+  - `sfh=1`: compute a six-parameter star formation history, including a τ model component (`∝ exp(-t/τ)`), a constant component, and a burst component. Parameterized by `tau`, `constant`, `sf_start`, `sf_trunc`, `tburst`, and `fburst`.
+  - `sfh=2`: not supported.
+  - `sfh=3`: compute a tabulated star formation history, which is specified using [`set_tabular_sfh`](@ref).
+  - `sfh=4`: compute a delayed-τ model star formation history, using the same parameterization as `sfh=1` except for the τ component taking the form `∝ t*exp(-t/τ)`.
+  - `sfh=5`: compute a delayed-τ model with a transition at a time `sf_trunc` to a linearly decreasing star formation history with slope specified by `sf_slope`, as per [Simha et al. (2014)](https://arxiv.org/abs/1404.0402).
+- `wgp1::Integer=1`: specify the optical depth in the [Witt & Gordon (2000)](https://doi.org/10.1086/308197) attenuation models, notably defined differently from the `dust1` and `dust2` parameters.
+  - Indexes the following optical depth array: `[0.25, 0.50, 0.75, 1.00, 1.50, 2.00, 2.50, 3.00, 3.50, 4.00, 4.50, 5.00, 5.50, 6.00, 7.00, 8.00, 9.00, 10.0]`
+- `wgp2::Integer=1`: specify the type of large-scale geometry and extinction curve as defined by [Witt & Gordon (2000)](https://doi.org/10.1086/308197).
+  - `wgp2=1`: specify a Milky Way plus dusty curve.
+  - `wgp2=2`: specify a Milky Way plus shell curve.
+  - `wgp2=3`: specify a Milky Way plus cloudy curve.
+  - `wgp2=4`: specify a Small Magellanic Cloud plus dusty curve.
+  - `wgp2=5`: specify a Small Magellanic Cloud plus shell curve.
+  - `wgp2=6`: specify a Small Magellanic Cloud plus cloudy curve.
+- `wgp3::Integer=1`: specify the local geometry used in the [Witt & Gordon (2000)](https://doi.org/10.1086/308197) attenuation curve.
+  - `wgp3=0`: specify a homogeneous distribution.
+  - `wgp3=1`: specify a clumpy distribution.
+- `tau::Real=1.0`: define the ℯ-folding time for a τ model star formation history in gigayears. Only used if `sfh==1` or `sfh==4`. Limits are `0.1 < tau < 100.0`.
+- `constant::Real=0.0`: parameterize the constant component for a star formation history, defined as the fraction of stellar mass formed in the constant mode of star formation. Only used if `sfh==1` or `sfh==4`. Limits are `0.0 ≤ constant ≤ 1.0`.
 """
-function _set_csp_params!(; smooth_velocity::Integer=true, redshift_colors::Integer=false,
-                          compute_light_ages::Integer=false, nebemlineinspec::Integer=true,
-                          dust_type::Integer=0, add_dust_emission::Integer=true,
-                          add_neb_emission::Integer=false, add_neb_continuum::Integer=true,
-                          cloudy_dust::Integer=false, add_igm_absorption::Integer=false,
+function set_csp_params!(; smooth_velocity::Bool=true, redshift_colors::Bool=false,
+                          compute_light_ages::Bool=false, nebemlineinspec::Bool=true,
+                          dust_type::Integer=0, add_dust_emission::Bool=true,
+                          add_neb_emission::Bool=false, add_neb_continuum::Bool=true,
+                          cloudy_dust::Bool=false, add_igm_absorption::Bool=false,
                           zmet::Integer=1, sfh::Integer=0, wgp1::Integer=1, wgp2::Integer=1,
                           wgp3::Integer=1, tau::Real=1.0, constant::Real=0.0, tage::Real=0.0,
                           fburst::Real=0.0, tburst::Real=11.0, dust1::Real=0.0, dust2::Real=0.0,
@@ -385,11 +428,11 @@ Compute the full composite stellar population (and simple stellar populations if
 already cached) after interpolation in metallicity specified by `zcontinuous`.
 
 # Arguments
-- `zcontinuous::Integer`: Flag specifying how interpolation in metallicity of the simple stellar populations is performed before computing composite stellar population models.
-  - `zcontinuous=0`: No interpolation, use only metallicity index specified by `zmet`.
-  - `zcontinuous=1`: The simple stellar populations are interpolated to the value of `logzsol` before the spectra and magnitudes are computed, and the value of `zmet` is ignored.
-  - `zcontinuous=2`: The simple stellar populations are convolved with a metallicity distribution function specified by the `logzsol` and `pmetals` parameters. The value of `zmet` is ignored.
-  - `zcontinuous=3`: Use all available simple stellar population metallicities when computing the composite model, for use exclusively with tabular star formation histories where the metallicity evolution as a function of age is given (see [`set_tabular_sfh`](@ref)). The values of `zmet` and `logzsol` are ignored. Furthermore, `add_neb_emission` must be set to `false`.
+- `zcontinuous::Integer`: set the flag specifying how interpolation in metallicity of the simple stellar populations is performed before computing composite stellar population models.
+  - `zcontinuous=0`: no interpolation, use only metallicity index specified by `zmet`.
+  - `zcontinuous=1`: the simple stellar populations are interpolated to the value of `logzsol` before the spectra and magnitudes are computed, and the value of `zmet` is ignored.
+  - `zcontinuous=2`: the simple stellar populations are convolved with a metallicity distribution function specified by the `logzsol` and `pmetals` parameters. The value of `zmet` is ignored.
+  - `zcontinuous=3`: use all available simple stellar population metallicities when computing the composite model, for use exclusively with tabular star formation histories where the metallicity evolution as a function of age is given (see [`set_tabular_sfh`](@ref)). The values of `zmet` and `logzsol` are ignored. Furthermore, `add_neb_emission` must be set to `false`.
 """
 function compute_zdep!(zcontinuous::Integer)
     ns = _get_nspec()
