@@ -70,15 +70,34 @@ Set the parameters that affect the simple stellar population computation.
 - `imf3::Real=2.3`: Logarithmic slope of the initial mass function over the range `1 < M/Msol < imf_upper_limit`. Only used if `imf_type=2`.
 - `vdmc::Real=0.08`: Initial mass function parameter defined by [van Dokkum (2008)](https://doi.org/10.1086/525014). Only used if `imf_type=3`.
 - `mdave::Real=0.5`: Initial mass function parameter defined by [Davé (2008)](https://doi.org/10.1111/j.1365-2966.2008.12866.x). Only used if `imf_type=4`.
-- `dell::Real=0.0`: Shift in the bolometric luminosity in the isochrones for the thermally-pulsating asympotic giant branch. Note that the meaning of this parameter and `delt` reflect the calibrations presented by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486). Only used if `tpagb_norm_type=1`.
+- `dell::Real=0.0`: Shift in bolometric luminosity in the isochrones for the thermally-pulsating asymptotic giant branch stars. Note that the meaning of this parameter and `delt` reflect the calibrations presented by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486). Only used if `tpagb_norm_type=1`.
+- `delt::Real=0.0`: Shift in effective temperature in the isochrones for the thermally-pulsating asymptotic giant branch stars. Note that the meaning of this parameter and `dell` reflect the calibrations presented by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486). Only used if `tpagb_norm_type=1`.
+- `sbss::Real=0.0`: Specific frequency of blue straggler stars as parameterized by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486).
+- `fbhb::Real=0.0`: Fraction of horizontal branch stars that are blue as parameterized by [Conroy et al. (2009)](https://doi.org/10.1088/0004-637X/699/1/486). The blue horizontal branch stars are uniformly spread in effective temperature to 10⁴ K.
+- `pagb::Real=1.0`: Weight given to the post-asymptotic giant branch phase. A value of `pagb=0.0` turns off post-asymptotic giant branch stars; a value of `pagb=1.0` implies that the [Vassiliadis & Wood (1994)](https://doi.org/10.1086/191962) tracks are implemented as-is.
+- `add_stellar_remnants::Integer=true`: Add stellar remnants in the stellar mass computation.
+- `tpagb_norm_type::Integer=2`: Specify the thermally-pulsating asymptotic giant branch normalization scheme.
+  - `tpagb_norm_type=0`: Use the Padova ([Marigo & Girardi 2007](https://doi.org/10.1051/0004-6361:20066772)) isochrones.
+  - `tpagb_norm_type=1`: Use the [Conroy & Gunn (2010)](https://doi.org/10.1088/0004-637X/712/2/833) normalization.
+  - `tpagb_norm_type=2`: Use the [Villaume et al. (2015)](https://doi.org/10.1088/0004-637X/806/1/82) normalization.
+- `add_agb_dust_model::Bool=true`: Turn on the asymptotic giant branch circumstellar dust model presented by [Villaume (2014)](https://doi.org/2014AAS...22315115V). The asymptotic giant branch emission is scaled by the parameter `agb_dust`.
+- `agb_dust::Real=1.0`: Scale the circumstellar asymptotic giant branch dust emission.
+- `redgb::Real=1.0`: Modify weight given to the red giant branch. Only available with the BaSTI isochrone set.
+- `agb::Real=1.0`: Modify weight given to the thermally-pulsating asymptotic giant branch. Only has an effect with FSPS version 3.1 or later.
+- `masscut::Real=150.0`: Truncate the initial mass function above this value (in solar masses).
+- `fcstar::Real=1.0`: Fraction of stars that the Padova isochrones identify as carbon stars that FSPS assigns to a carbon star spectrum. Set to `0.0` if all carbon stars should be regular M-type stars.
+- `evtype::Integer=-1`: Compute simple stellar populations for only the given evolutionary type. All phases used when `evtype=-1`.
+- `use_wr_spectra::Bool=true`: Turn on the Wolf-Rayet spectral library. If `false`, the default library will be used instead.
+- `logt_wmb_hot::Real=0.0`: Use the WMBasic hot star library ([Eldridge et al. 2017](https://doi.org/10.1017/pasa.2017.51) above this value of effective temperature or 25000 K (whichever is larger).
+- `smooth_lsf::Bool=false`: Apply smoothing of the simple stellar populations by a wavelength dependent line spread function. See [`set_lsf`](@ref) for more details. Only takes effect if `smooth_velocity=true`.
 """
 function set_ssp_params!(; imf_type::Integer=2, imf_upper_limit::Real=120.0, imf_lower_limit::Real=0.08,
                          imf1::Real=1.3, imf2::Real=2.3, imf3::Real=2.3, vdmc::Real=0.08, mdave::Real=0.5,
                          dell::Real=0.0, delt::Real=0.0, sbss::Real=0.0, fbhb::Real=0.0, pagb::Real=1.0,
-                         add_stellar_remnants::Integer=true, tpagb_norm_type::Integer=2,
-                         add_agb_dust_model::Integer=true, agb_dust::Real=1.0, redgb::Real=1.0, agb::Real=1.0,
-                         masscut::Real=150.0, fcstar::Real=1.0, evtype::Real=-1, use_wr_spectra::Integer=true,
-                         logt_wmb_hot::Real=0.0, smooth_lsf::Integer=false)
+                         add_stellar_remnants::Bool=true, tpagb_norm_type::Integer=2,
+                         add_agb_dust_model::Bool=true, agb_dust::Real=1.0, redgb::Real=1.0, agb::Real=1.0,
+                         masscut::Real=150.0, fcstar::Real=1.0, evtype::Integer=-1, use_wr_spectra::Bool=true,
+                         logt_wmb_hot::Real=0.0, smooth_lsf::Bool=false)
     temp_imf_type = Cint[imf_type]
     temp_imf_upper_limit = Cdouble[imf_upper_limit]
     temp_imf_lower_limit = Cdouble[imf_lower_limit]
